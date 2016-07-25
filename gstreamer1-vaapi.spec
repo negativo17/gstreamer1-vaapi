@@ -1,6 +1,6 @@
 Name:           gstreamer1-vaapi
 Version:        1.8.2
-Release:        1%{?dist}
+Release:        2%{?dist}
 Epoch:          1
 Summary:        GStreamer VA-API integration
 License:        LGPLv2+
@@ -91,5 +91,8 @@ find %{buildroot} -name "*.la" -delete
 %doc %{_datadir}/gtk-doc
 
 %changelog
+* Mon Jul 25 2016 Simone Caronni <negativo17@gmail.com> - 1:1.8.2-2
+- Fix devel-docs requirements
+
 * Mon Jun 13 2016 Simone Caronni <negativo17@gmail.com> - 1:1.8.2-1
 - First build.
