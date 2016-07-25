@@ -50,8 +50,12 @@ GStreamer.
 
 %package        devel-docs
 Summary:        Development documentation for the GStreamer VA-API integration
+BuildArch:      noarch
 Requires:       %{name}%{?isa} = %{?epoch}:%{version}-%{release}
 Requires:       pkgconfig
+# Fix for devel-docs not being noarch
+Obsoletes:      %{name}-devel-docs < %{?epoch}:%{version}-1
+Provides:       %{name}-devel-docs = %{?epoch}:%{version}-%{release}
 
 %description    devel-docs
 GStreamer is a streaming media framework, based on graphs of elements which
@@ -92,7 +96,7 @@ find %{buildroot} -name "*.la" -delete
 
 %changelog
 * Mon Jul 25 2016 Simone Caronni <negativo17@gmail.com> - 1:1.8.2-2
-- Fix devel-docs requirements.
+- Fix devel-docs requirements, make subpackage noarch.
 
 * Mon Jun 13 2016 Simone Caronni <negativo17@gmail.com> - 1:1.8.2-1
 - First build.
