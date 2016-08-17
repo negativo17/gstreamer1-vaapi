@@ -1,6 +1,6 @@
 Name:           gstreamer1-vaapi
-Version:        1.8.2
-Release:        2%{?dist}
+Version:        1.9.1
+Release:        1%{?dist}
 Epoch:          1
 Summary:        GStreamer VA-API integration
 License:        LGPLv2+
@@ -11,9 +11,9 @@ Source0:        https://gstreamer.freedesktop.org/src/gstreamer-vaapi/gstreamer-
 BuildRequires:  autoconf
 BuildRequires:  automake
 BuildRequires:  glib2-devel >= 2.32
-BuildRequires:  gstreamer1-devel >= 1.8.0
-BuildRequires:  gstreamer1-plugins-base-devel >= 1.8.0
-BuildRequires:  gstreamer1-plugins-bad-free-devel >= 1.8.0
+BuildRequires:  gstreamer1-devel >= 1.9.1
+BuildRequires:  gstreamer1-plugins-base-devel >= 1.9.1
+BuildRequires:  gstreamer1-plugins-bad-free-devel >= 1.9.1
 BuildRequires:  libtool
 BuildRequires:  libvpx-devel
 BuildRequires:  pkgconfig(egl)
@@ -95,6 +95,9 @@ find %{buildroot} -name "*.la" -delete
 %doc %{_datadir}/gtk-doc
 
 %changelog
+* Wed Aug 17 2016 Simone Caronni <negativo17@gmail.com> - 1:1.9.1-1
+- Update to 1.9.1.
+
 * Mon Jul 25 2016 Simone Caronni <negativo17@gmail.com> - 1:1.8.2-2
 - Fix devel-docs requirements, make subpackage noarch.
 
