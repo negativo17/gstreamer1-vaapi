@@ -1,5 +1,5 @@
 Name:           gstreamer1-vaapi
-Version:        1.10.0
+Version:        1.10.1
 Release:        1%{?dist}
 Epoch:          1
 Summary:        GStreamer VA-API integration
@@ -12,8 +12,8 @@ BuildRequires:  autoconf
 BuildRequires:  automake
 BuildRequires:  glib2-devel >= 2.32
 BuildRequires:  gstreamer1-devel >= 1.10.0
-BuildRequires:  gstreamer1-plugins-base-devel >= 1.10.0
-BuildRequires:  gstreamer1-plugins-bad-devel >= 1.10.0
+BuildRequires:  gstreamer1-plugins-base-devel >= 1.10.1
+BuildRequires:  gstreamer1-plugins-bad-devel >= 1.10.1
 BuildRequires:  libtool
 BuildRequires:  libvpx-devel
 BuildRequires:  pkgconfig(egl)
@@ -95,6 +95,9 @@ find %{buildroot} -name "*.la" -delete
 %doc %{_datadir}/gtk-doc
 
 %changelog
+* Mon Nov 28 2016 Simone Caronni <negativo17@gmail.com> - 1:1.10.1-1
+- Update to 1.10.1.
+
 * Thu Nov 10 2016 Simone Caronni <negativo17@gmail.com> - 1:1.10.0-1
 - Update to 1.10.0.
 
