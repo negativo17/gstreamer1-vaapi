@@ -11,9 +11,9 @@ Source0:        https://gstreamer.freedesktop.org/src/gstreamer-vaapi/gstreamer-
 BuildRequires:  autoconf
 BuildRequires:  automake
 BuildRequires:  glib2-devel >= 2.32
-BuildRequires:  gstreamer1-devel >= 1.10.0
-BuildRequires:  gstreamer1-plugins-base-devel >= 1.10.1
-BuildRequires:  gstreamer1-plugins-bad-devel >= 1.10.1
+BuildRequires:  gstreamer1-devel >= %{version}
+BuildRequires:  gstreamer1-plugins-base-devel >= %{version}
+BuildRequires:  gstreamer1-plugins-bad-devel >= %{version}
 BuildRequires:  libtool
 BuildRequires:  libvpx-devel
 BuildRequires:  pkgconfig(egl)
