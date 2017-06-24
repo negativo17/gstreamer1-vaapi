@@ -36,11 +36,6 @@ BuildRequires:  pkgconfig(wayland-cursor) >= 1.0.2
 BuildRequires:  pkgconfig(wayland-egl)
 %endif
 
-# We can't provide encoders or decoders unless we know what VA-API drivers
-# are on the system. Just filter them out, so they're not suggested by
-# PackageKit et al.
-#global __provides_exclude gstreamer1\\(decoder|gstreamer1\\(encoder
-
 %description
 GStreamer is a streaming media framework, based on graphs of elements which
 operate on media data.
