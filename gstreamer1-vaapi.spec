@@ -1,5 +1,5 @@
 Name:           gstreamer1-vaapi
-Version:        1.10.4
+Version:        1.10.5
 Release:        1%{?dist}
 Epoch:          1
 Summary:        GStreamer VA-API integration
@@ -95,6 +95,9 @@ find %{buildroot} -name "*.la" -delete
 %doc %{_datadir}/gtk-doc
 
 %changelog
+* Sun Jun 25 2017 Simone Caronni <negativo17@gmail.com> - 1:1.10.5-1
+- Update to 1.10.5.
+
 * Wed Apr 19 2017 Simone Caronni <negativo17@gmail.com> - 1:1.10.4-1
 - Update to 1.10.4.
 
