@@ -1,20 +1,19 @@
 Name:           gstreamer1-vaapi
-Version:        0.7.0
+Version:        1.10.4
 Release:        1%{?dist}
 Epoch:          1
 Summary:        GStreamer VA-API integration
 License:        LGPLv2+
 URL:            https://gstreamer.freedesktop.org/modules/gstreamer-vaapi.html
 
-Source0:        https://gstreamer.freedesktop.org/src/gstreamer-vaapi/gstreamer-vaapi-%{version}.tar.bz2
+Source0:        https://gstreamer.freedesktop.org/src/gstreamer-vaapi/gstreamer-vaapi-%{version}.tar.xz
 
 BuildRequires:  autoconf
 BuildRequires:  automake
 BuildRequires:  glib2-devel >= 2.32
-BuildRequires:  gstreamer1-devel >= 1.3.0
-BuildRequires:  gstreamer1-plugins-base-devel >= 1.3.0
-BuildRequires:  gstreamer1-plugins-bad-free-devel >= 1.3.0
-BuildRequires:  gtk-doc >= 1.9
+BuildRequires:  gstreamer1-devel >= %{version}
+BuildRequires:  gstreamer1-plugins-base-devel >= %{version}
+BuildRequires:  gstreamer1-plugins-bad-devel >= %{version}
 BuildRequires:  libtool
 BuildRequires:  libvpx-devel
 BuildRequires:  pkgconfig(egl)
@@ -49,15 +48,6 @@ operate on media data.
 VA-API-based decoder, encoder, postprocessing and video sink elements for
 GStreamer.
 
-%package        devel
-Summary:        Development files for %{name}
-Requires:       %{name}%{?isa} = %{?epoch}:%{version}-%{release}
-Requires:       pkgconfig
-
-%description	devel
-The %{name}-devel package contains libraries and header files for
-developing applications that use %{name}.
-
 %package        devel-docs
 Summary:        Development documentation for the GStreamer VA-API integration
 BuildArch:      noarch
@@ -76,10 +66,11 @@ integration.
 
 %prep
 %setup -q -n gstreamer-vaapi-%{version}
+sed -i -e 's/-Wno-portability 1.14/-Wno-portability 1.13/g' configure.ac
 
 %build
 autoreconf -vif
-%configure --disable-static --disable-builtin-libvpx --enable-gtk-doc
+%configure --disable-static
 make %{?_smp_mflags}
 
 %install
@@ -95,21 +86,17 @@ find %{buildroot} -name "*.la" -delete
 %postun -p /sbin/ldconfig
 
 %files
-%{!?_licensedir:%global license %%doc}
 %license COPYING.LIB
 %doc AUTHORS NEWS README
-%{_libdir}/*.so.*
 %{_libdir}/gstreamer-1.0/*.so
-
-%files devel
-%{_includedir}/gstreamer-1.0/gst/vaapi
-%{_libdir}/*.so
-%{_libdir}/pkgconfig/gstreamer-vaapi*.pc
 
 %files devel-docs
 # Take the dir and everything below it for proper dir ownership
 %doc %{_datadir}/gtk-doc
 
 %changelog
+* Wed Aug 16 2017 Simone Caronni <negativo17@gmail.com> - 1:1.10.4-1
+- Update to 1.10.4.
+
 * Wed Aug 17 2016 Simone Caronni <negativo17@gmail.com> - 1:0.7.0-1
 - Initial import.
