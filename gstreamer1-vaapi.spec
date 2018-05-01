@@ -1,6 +1,6 @@
 Name:           gstreamer1-vaapi
 Version:        1.10.4
-Release:        1%{?dist}
+Release:        2%{?dist}
 Epoch:          1
 Summary:        GStreamer VA-API integration
 License:        LGPLv2+
@@ -71,19 +71,13 @@ sed -i -e 's/-Wno-portability 1.14/-Wno-portability 1.13/g' configure.ac
 %build
 autoreconf -vif
 %configure --disable-static
-make %{?_smp_mflags}
+%make_build
 
 %install
 %make_install
 find %{buildroot} -name "*.la" -delete
 
-# rpmlint fixes
-#find %{buildroot} -name "*.c" -exec chmod 644 {} \;
-#find %{buildroot} -name "*.h" -exec chmod 644 {} \;
-
-%post -p /sbin/ldconfig
-
-%postun -p /sbin/ldconfig
+%ldconfig_scriptlets
 
 %files
 %license COPYING.LIB
@@ -95,6 +89,9 @@ find %{buildroot} -name "*.la" -delete
 %doc %{_datadir}/gtk-doc
 
 %changelog
+* Tue May 01 2018 Simone Caronni <negativo17@gmail.com> - 1:1.10.4-2
+- Rebuild for updated dependencies.
+
 * Wed Aug 16 2017 Simone Caronni <negativo17@gmail.com> - 1:1.10.4-1
 - Update to 1.10.4.
 
