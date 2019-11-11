@@ -1,68 +1,53 @@
 Name:           gstreamer1-vaapi
-Version:        1.10.4
-Release:        2%{?dist}
-Epoch:          1
-Summary:        GStreamer VA-API integration
+Version:        1.14.4
+Release:        1%{?dist}
+Summary:        GStreamer plugins to use VA API video acceleration
 License:        LGPLv2+
-URL:            https://gstreamer.freedesktop.org/modules/gstreamer-vaapi.html
+URL:            https://cgit.freedesktop.org/gstreamer/gstreamer-vaapi
 
 Source0:        https://gstreamer.freedesktop.org/src/gstreamer-vaapi/gstreamer-vaapi-%{version}.tar.xz
 
 BuildRequires:  autoconf
 BuildRequires:  automake
+BuildRequires:  gcc
 BuildRequires:  glib2-devel >= 2.32
-BuildRequires:  gstreamer1-devel >= %{version}
-BuildRequires:  gstreamer1-plugins-base-devel >= %{version}
-BuildRequires:  gstreamer1-plugins-bad-devel >= %{version}
+BuildRequires:  gstreamer1-devel >= 1.4.0
+BuildRequires:  gstreamer1-plugins-bad-free-devel >= 1.4.0
+BuildRequires:  gstreamer1-plugins-base-devel >= 1.4.0
+BuildRequires:  libdrm-devel
+BuildRequires:  libGL-devel
 BuildRequires:  libtool
+BuildRequires:  libudev-devel
+BuildRequires:  libva-devel >= 1.1.0
 BuildRequires:  libvpx-devel
 BuildRequires:  pkgconfig(egl)
-BuildRequires:  pkgconfig(gl)
-BuildRequires:  pkgconfig(glesv2)
-#BuildRequires:  pkgconfig(glesv3)
-BuildRequires:  pkgconfig(libdrm)
-BuildRequires:  pkgconfig(libudev)
-BuildRequires:  pkgconfig(libva) >= 0.34.0
-BuildRequires:  pkgconfig(libva-x11) >= 0.31.0
-BuildRequires:  pkgconfig(libva-drm) >= 0.33.0
-BuildRequires:  pkgconfig(x11)
+BuildRequires:  pkgconfig(wayland-client)
+BuildRequires:  pkgconfig(wayland-cursor)
+BuildRequires:  pkgconfig(wayland-egl)
+BuildRequires:  pkgconfig(wayland-scanner)
+BuildRequires:  pkgconfig(wayland-server)
 BuildRequires:  pkgconfig(xrandr)
 BuildRequires:  pkgconfig(xrender)
-
-%if 0%{?fedora} || 0%{?rhel} >= 8
-BuildRequires:  pkgconfig(libva-wayland) >= 0.33.0
-BuildRequires:  pkgconfig(wayland-client) >= 1.0.2
-BuildRequires:  pkgconfig(wayland-cursor) >= 1.0.2
-BuildRequires:  pkgconfig(wayland-egl)
-%endif
-
-# We can't provide encoders or decoders unless we know what VA-API drivers
-# are on the system. Just filter them out, so they're not suggested by
-# PackageKit et al.
-#global __provides_exclude gstreamer1\\(decoder|gstreamer1\\(encoder
+BuildRequires:  wayland-devel
 
 %description
-GStreamer is a streaming media framework, based on graphs of elements which
-operate on media data.
+A collection of GStreamer plugins to let you make use of VA API video acceleration
+from GStreamer applications.
 
-VA-API-based decoder, encoder, postprocessing and video sink elements for
-GStreamer.
+Includes elements for video decoding, display, encoding and post-processing
+using VA API (subject to hardware limitations).
 
 %package        devel-docs
-Summary:        Development documentation for the GStreamer VA-API integration
+Summary:        Developer documentation for GStreamer VA API video acceleration plugins
+Requires:       %{name} = %{version}-%{release}
 BuildArch:      noarch
-Requires:       %{name}%{?isa} = %{?epoch}:%{version}-%{release}
-Requires:       pkgconfig
-# Fix for devel-docs not being noarch
-Obsoletes:      %{name}-devel-docs < %{?epoch}:%{version}-1
-Provides:       %{name}-devel-docs = %{?epoch}:%{version}-%{release}
 
-%description    devel-docs
-GStreamer is a streaming media framework, based on graphs of elements which
-operate on media data.
+Provides:       gstreamer1-vaapi-devel = %{version}-%{release}
+Obsoletes:      gstreamer1-vaapi-devel < 0.6.1-3
 
-This package contains the development documentation for the GStreamer VA-API
-integration.
+%description	devel-docs
+The %{name}-devel-docs package contains developer documentation
+for the GStreamer VA API video acceleration plugins
 
 %prep
 %setup -q -n gstreamer-vaapi-%{version}
@@ -70,25 +55,38 @@ sed -i -e 's/-Wno-portability 1.14/-Wno-portability 1.13/g' configure.ac
 
 %build
 autoreconf -vif
-%configure --disable-static
+# Wayland support in libva isn't present - gstreamer-vaapi can't support Wayland without it
+# https://bugzilla.redhat.com/show_bug.cgi?id=1051862
+%configure --disable-silent-rules --disable-fatal-warnings \
+           --enable-static=no \
+           %{?_without_wayland:--disable-wayland} \
+           --disable-builtin-libvpx
+
 %make_build
 
 %install
 %make_install
-find %{buildroot} -name "*.la" -delete
+
+find %{buildroot} -type f -name "*.la" -delete
+
+%check
+make check
 
 %ldconfig_scriptlets
 
 %files
-%license COPYING.LIB
 %doc AUTHORS NEWS README
+%license COPYING.LIB
 %{_libdir}/gstreamer-1.0/*.so
 
 %files devel-docs
-# Take the dir and everything below it for proper dir ownership
+%doc AUTHORS NEWS README
 %doc %{_datadir}/gtk-doc
 
 %changelog
+* Mon Nov 11 2019 Simone Caronni <negativo17@gmail.com> - 1.14.4-1
+- Rebase to 1.14.4.
+
 * Tue May 01 2018 Simone Caronni <negativo17@gmail.com> - 1:1.10.4-2
 - Rebuild for updated dependencies.
 
