@@ -1,6 +1,7 @@
 Name:           gstreamer1-vaapi
+Epoch:          1
 Version:        1.14.4
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        GStreamer plugins to use VA API video acceleration
 License:        LGPLv2+
 URL:            https://cgit.freedesktop.org/gstreamer/gstreamer-vaapi
@@ -50,24 +51,19 @@ The %{name}-devel-docs package contains developer documentation
 for the GStreamer VA API video acceleration plugins
 
 %prep
-%setup -q -n gstreamer-vaapi-%{version}
+%autosetup -n gstreamer-vaapi-%{version}
 sed -i -e 's/-Wno-portability 1.14/-Wno-portability 1.13/g' configure.ac
 
 %build
 autoreconf -vif
-# Wayland support in libva isn't present - gstreamer-vaapi can't support Wayland without it
-# https://bugzilla.redhat.com/show_bug.cgi?id=1051862
-%configure --disable-silent-rules --disable-fatal-warnings \
-           --enable-static=no \
-           %{?_without_wayland:--disable-wayland} \
-           --disable-builtin-libvpx
+%configure --enable-static=no
 
 %make_build
 
 %install
 %make_install
 
-find %{buildroot} -type f -name "*.la" -delete
+find %{buildroot} -name "*.la" -delete
 
 %check
 make check
@@ -84,6 +80,9 @@ make check
 %doc %{_datadir}/gtk-doc
 
 %changelog
+* Sun May 17 2020 Simone Caronni <negativo17@gmail.com> - 1.14.4-2
+- Rebuild for updated dependencies.
+
 * Mon Nov 11 2019 Simone Caronni <negativo17@gmail.com> - 1.14.4-1
 - Rebase to 1.14.4.
 
