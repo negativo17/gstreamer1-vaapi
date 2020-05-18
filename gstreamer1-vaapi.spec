@@ -1,5 +1,5 @@
 Name:           gstreamer1-vaapi
-Version:        1.12.3
+Version:        1.16.1
 Release:        1%{?dist}
 Epoch:          1
 Summary:        GStreamer VA-API integration
@@ -25,16 +25,13 @@ BuildRequires:  pkgconfig(libudev)
 BuildRequires:  pkgconfig(libva) >= 0.34.0
 BuildRequires:  pkgconfig(libva-x11) >= 0.31.0
 BuildRequires:  pkgconfig(libva-drm) >= 0.33.0
-BuildRequires:  pkgconfig(x11)
-BuildRequires:  pkgconfig(xrandr)
-BuildRequires:  pkgconfig(xrender)
-
-%if 0%{?fedora} || 0%{?rhel} >= 8
 BuildRequires:  pkgconfig(libva-wayland) >= 0.33.0
 BuildRequires:  pkgconfig(wayland-client) >= 1.0.2
 BuildRequires:  pkgconfig(wayland-cursor) >= 1.0.2
 BuildRequires:  pkgconfig(wayland-egl)
-%endif
+BuildRequires:  pkgconfig(x11)
+BuildRequires:  pkgconfig(xrandr)
+BuildRequires:  pkgconfig(xrender)
 
 %description
 GStreamer is a streaming media framework, based on graphs of elements which
@@ -60,36 +57,31 @@ This package contains the development documentation for the GStreamer VA-API
 integration.
 
 %prep
-%setup -q -n gstreamer-vaapi-%{version}
+%autosetup -n gstreamer-vaapi-%{version}
 
 %build
 autoreconf -vif
-%configure --disable-static
-make %{?_smp_mflags}
+%configure --enable-static=no
+%make_build
 
 %install
 %make_install
 find %{buildroot} -name "*.la" -delete
 
-# rpmlint fixes
-#find %{buildroot} -name "*.c" -exec chmod 644 {} \;
-#find %{buildroot} -name "*.h" -exec chmod 644 {} \;
-
-%post -p /sbin/ldconfig
-
-%postun -p /sbin/ldconfig
+%ldconfig_scriptlets
 
 %files
-%{!?_licensedir:%global license %%doc}
 %license COPYING.LIB
 %doc AUTHORS NEWS README
 %{_libdir}/gstreamer-1.0/*.so
 
 %files devel-docs
-# Take the dir and everything below it for proper dir ownership
 %doc %{_datadir}/gtk-doc
 
 %changelog
+* Fri Dec 18 2020 Simone Caronni <negativo17@gmail.com> - 1:1.16.1-1
+- First build for CentOS/RHEL 8.
+
 * Mon Oct 23 2017 Simone Caronni <negativo17@gmail.com> - 1:1.12.3-1
 - Update to 1.12.3.
 
