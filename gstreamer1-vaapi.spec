@@ -1,5 +1,5 @@
 Name:           gstreamer1-vaapi
-Version:        1.12.3
+Version:        1.16.2
 Release:        1%{?dist}
 Epoch:          1
 Summary:        GStreamer VA-API integration
@@ -60,36 +60,31 @@ This package contains the development documentation for the GStreamer VA-API
 integration.
 
 %prep
-%setup -q -n gstreamer-vaapi-%{version}
+%autosetup -n gstreamer-vaapi-%{version}
 
 %build
 autoreconf -vif
-%configure --disable-static
-make %{?_smp_mflags}
+%configure --enable-static=no
+%make_build
 
 %install
 %make_install
 find %{buildroot} -name "*.la" -delete
 
-# rpmlint fixes
-#find %{buildroot} -name "*.c" -exec chmod 644 {} \;
-#find %{buildroot} -name "*.h" -exec chmod 644 {} \;
-
-%post -p /sbin/ldconfig
-
-%postun -p /sbin/ldconfig
+%ldconfig_scriptlets
 
 %files
-%{!?_licensedir:%global license %%doc}
 %license COPYING.LIB
 %doc AUTHORS NEWS README
 %{_libdir}/gstreamer-1.0/*.so
 
 %files devel-docs
-# Take the dir and everything below it for proper dir ownership
 %doc %{_datadir}/gtk-doc
 
 %changelog
+* Mon May 18 2020 Simone Caronni <negativo17@gmail.com> - 1:1.16.2-1
+- Revive package to update to latest libva.
+
 * Mon Oct 23 2017 Simone Caronni <negativo17@gmail.com> - 1:1.12.3-1
 - Update to 1.12.3.
 
