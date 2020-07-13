@@ -1,7 +1,7 @@
 Name:           gstreamer1-vaapi
 Epoch:          1
-Version:        1.14.4
-Release:        2%{?dist}
+Version:        1.14.5
+Release:        1%{?dist}
 Summary:        GStreamer plugins to use VA API video acceleration
 License:        LGPLv2+
 URL:            https://cgit.freedesktop.org/gstreamer/gstreamer-vaapi
@@ -80,6 +80,9 @@ make check
 %doc %{_datadir}/gtk-doc
 
 %changelog
+* Mon Jul 13 2020 Simone Caronni <negativo17@gmail.com> - 1:1.14.5-1
+- Update to 1.14.5.
+
 * Sun May 17 2020 Simone Caronni <negativo17@gmail.com> - 1.14.4-2
 - Rebuild for updated dependencies.
 
