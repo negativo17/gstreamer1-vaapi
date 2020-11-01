@@ -1,5 +1,5 @@
 Name:           gstreamer1-vaapi
-Version:        1.16.2
+Version:        1.18.1
 Release:        1%{?dist}
 Epoch:          1
 Summary:        GStreamer VA-API integration
@@ -8,21 +8,21 @@ URL:            https://gstreamer.freedesktop.org/modules/gstreamer-vaapi.html
 
 Source0:        https://gstreamer.freedesktop.org/src/gstreamer-vaapi/gstreamer-vaapi-%{version}.tar.xz
 
-BuildRequires:  autoconf
-BuildRequires:  automake
-BuildRequires:  glib2-devel >= 2.32
+BuildRequires:  gcc
+BuildRequires:  glib2-devel >= 2.44
 BuildRequires:  gstreamer1-devel >= %{version}
 BuildRequires:  gstreamer1-plugins-base-devel >= %{version}
 BuildRequires:  gstreamer1-plugins-bad-devel >= %{version}
-BuildRequires:  libtool
 BuildRequires:  libvpx-devel
+BuildRequires:  meson >= 0.48.0
 BuildRequires:  pkgconfig(egl)
 BuildRequires:  pkgconfig(gl)
 BuildRequires:  pkgconfig(glesv2)
 #BuildRequires:  pkgconfig(glesv3)
+BuildRequires:  pkgconfig(gtk+-3.0)
 BuildRequires:  pkgconfig(libdrm)
 BuildRequires:  pkgconfig(libudev)
-BuildRequires:  pkgconfig(libva) >= 0.34.0
+BuildRequires:  pkgconfig(libva) >= 0.39.0
 BuildRequires:  pkgconfig(libva-x11) >= 0.31.0
 BuildRequires:  pkgconfig(libva-drm) >= 0.33.0
 BuildRequires:  pkgconfig(x11)
@@ -31,9 +31,11 @@ BuildRequires:  pkgconfig(xrender)
 
 %if 0%{?fedora} || 0%{?rhel} >= 8
 BuildRequires:  pkgconfig(libva-wayland) >= 0.33.0
-BuildRequires:  pkgconfig(wayland-client) >= 1.0.2
-BuildRequires:  pkgconfig(wayland-cursor) >= 1.0.2
+BuildRequires:  pkgconfig(wayland-client) >= 1.11.0
+BuildRequires:  pkgconfig(wayland-cursor) >= 1.11.0
 BuildRequires:  pkgconfig(wayland-egl)
+BuildRequires:  pkgconfig(wayland-protocols) >= 1.11.0
+BuildRequires:  pkgconfig(wayland-scanner) >= 1.11.0
 %endif
 
 %description
@@ -43,45 +45,36 @@ operate on media data.
 VA-API-based decoder, encoder, postprocessing and video sink elements for
 GStreamer.
 
-%package        devel-docs
-Summary:        Development documentation for the GStreamer VA-API integration
-BuildArch:      noarch
-Requires:       %{name}%{?isa} = %{?epoch}:%{version}-%{release}
-Requires:       pkgconfig
-# Fix for devel-docs not being noarch
-Obsoletes:      %{name}-devel-docs < %{?epoch}:%{version}-1
-Provides:       %{name}-devel-docs = %{?epoch}:%{version}-%{release}
-
-%description    devel-docs
-GStreamer is a streaming media framework, based on graphs of elements which
-operate on media data.
-
-This package contains the development documentation for the GStreamer VA-API
-integration.
-
 %prep
 %autosetup -n gstreamer-vaapi-%{version}
 
 %build
-autoreconf -vif
-%configure --enable-static=no
-%make_build
+%meson \
+  -D doc=disabled \
+  -D with_drm=yes \
+  -D with_egl=yes \
+  -D with_encoders=yes \
+  -D with_glx=yes \
+  -D with_wayland=yes \
+  -D with_x11=yes
+
+%meson_build
 
 %install
-%make_install
+%meson_install
 find %{buildroot} -name "*.la" -delete
 
 %ldconfig_scriptlets
 
 %files
 %license COPYING.LIB
-%doc AUTHORS NEWS README
+%doc AUTHORS NEWS README ChangeLog
 %{_libdir}/gstreamer-1.0/*.so
 
-%files devel-docs
-%doc %{_datadir}/gtk-doc
-
 %changelog
+* Sun Nov 01 2020 Simone Caronni <negativo17@gmail.com> - 1:1.18.1-1
+- Update to 1.18.1, rebase on Meson.
+
 * Mon May 18 2020 Simone Caronni <negativo17@gmail.com> - 1:1.16.2-1
 - Revive package to update to latest libva.
 
