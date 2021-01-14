@@ -1,5 +1,5 @@
 Name:           gstreamer1-vaapi
-Version:        1.18.1
+Version:        1.18.2
 Release:        1%{?dist}
 Epoch:          1
 Summary:        GStreamer VA-API integration
@@ -25,18 +25,15 @@ BuildRequires:  pkgconfig(libudev)
 BuildRequires:  pkgconfig(libva) >= 0.39.0
 BuildRequires:  pkgconfig(libva-x11) >= 0.31.0
 BuildRequires:  pkgconfig(libva-drm) >= 0.33.0
-BuildRequires:  pkgconfig(x11)
-BuildRequires:  pkgconfig(xrandr)
-BuildRequires:  pkgconfig(xrender)
-
-%if 0%{?fedora} || 0%{?rhel} >= 8
 BuildRequires:  pkgconfig(libva-wayland) >= 0.33.0
 BuildRequires:  pkgconfig(wayland-client) >= 1.11.0
 BuildRequires:  pkgconfig(wayland-cursor) >= 1.11.0
 BuildRequires:  pkgconfig(wayland-egl)
 BuildRequires:  pkgconfig(wayland-protocols) >= 1.11.0
 BuildRequires:  pkgconfig(wayland-scanner) >= 1.11.0
-%endif
+BuildRequires:  pkgconfig(x11)
+BuildRequires:  pkgconfig(xrandr)
+BuildRequires:  pkgconfig(xrender)
 
 %description
 GStreamer is a streaming media framework, based on graphs of elements which
@@ -72,6 +69,9 @@ find %{buildroot} -name "*.la" -delete
 %{_libdir}/gstreamer-1.0/*.so
 
 %changelog
+* Thu Jan 14 2021 Simone Caronni <negativo17@gmail.com> - 1:1.18.2-1
+- Update to 1.18.2.
+
 * Sun Nov 01 2020 Simone Caronni <negativo17@gmail.com> - 1:1.18.1-1
 - Update to 1.18.1, rebase on Meson.
 
